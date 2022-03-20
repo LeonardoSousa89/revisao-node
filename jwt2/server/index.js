@@ -5,7 +5,14 @@ const express  = require('express')
 const server   = express.Router()
 
 function validationUser(req,res, next){
+    const token = req.headers['x-access-token']
 
+    jwt.verify(token,SECRET,(err, decoded)=>{
+        if(err) return res.status(401).send('Usuário não autorizado.')
+
+        req.id = decoded.id
+        next()
+    })
 }
 
 server.route('/data').get(validationUser,(req,res)=>{
