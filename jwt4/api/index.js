@@ -17,10 +17,13 @@ function validToken(req, res, next){
     })
 }
 
-server.route('/data').get(validToken,(req, res)=>{
+server.route('/app/user/:id').get(validToken,(req, res)=>{
+    const USER = { ...req.params }
+
     db.select(['id_client','username','email','datauser'])
       .from('client')
       .innerJoin('client_data','id_client','id_strange')
+      .where('id_client', USER.id)
       .then(client => res.status(200).json(client))
       .catch(err   => res.status(500).send(err))
 })
